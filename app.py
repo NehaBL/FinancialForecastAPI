@@ -1,21 +1,13 @@
-from flask import Flask, request, jsonify
-import pandas as pd
-import numpy as np
+from flask import Flask, jsonify, request
+import os
 
 app = Flask(__name__)
 
-@app.route("/forecast", methods=["POST"])
+@app.route('/forecast', methods=['GET'])
 def forecast():
-    data = request.get_json(force=True)
-    df = pd.DataFrame(data["data"])
+    return jsonify({'message': 'Financial Forecast API working!'})
 
-    # Dummy forecast logic
-    if "Revenue" in df.columns:
-        df["Forecast"] = df["Revenue"] * 1.1
-    else:
-        df["Forecast"] = np.nan
+if __name__ == '__main__':
+    port = int(os.environ.get('PORT', 10000))  # use the port Render provides
+    app.run(host='0.0.0.0', port=port)         # bind to 0.0.0.0
 
-    return jsonify(df.to_dict(orient="records"))
-
-if __name__ == "__main__":
-    app.run(debug=True)
